@@ -4,11 +4,11 @@ location="southafricanorth"
 
 create_rg() {
     read -rp "Enter resource group name: " rg
-    echo "Creating resource group, standby"
+    echo -e "Creating resource group, standby \n"
 
     if [ -z "${rg}" ]; then
-        echo "resource group name is empty"
-        exit 1
+        echo -e "resource group name is empty. \n"
+        return 1
     fi
 
     if
@@ -18,9 +18,9 @@ create_rg() {
     --tags env=prod owner=tes \
     --output table;
     then
-        echo "${rg} created successfully"
+        echo -e "${rg} created successfully \n"
     else
-        echo "rg creation failed"
+        echo -e "rg creation failed \n"
     fi
 
 }
@@ -38,33 +38,33 @@ create_storage() {
     --sku "Standard_LRS" \
     --output table;
     then
-        echo "Storage account created successfully."
+        echo -e "Storage account created successfully. \n"
     else
-        echo "Storage account creation failed"
+        echo -e "Storage account creation failed \n"
     fi
 }
 
 create_network() {
     # echo "Name of resource group: ${rg}"
-    read -rp "Enter name of Virtual Network" vnet
+    read -rp "Enter name of Virtual Network: " vnet
 
     if [[ -z "${vnet}" ]]; then
-    echo "Vnet name is empty. Exiting..."
-    exit 1
+    echo -e "Vnet name is empty. Exiting... \n"
+    return 1
     fi
 
     if
     az network vnet create \
-        -n "${vnet} \
-        -g "${rg} \
+        -n "${vnet}" \
+        -g "${rg}" \
         --address-prefix 10.0.0.0/16 \
         --subnet-name default \
         --subnet-prefix 10.0.0.0/24 \
         --output table;
     then
-        echo "Virtual network creation successful"
+        echo "Virtual network creation successful \n"
     else
-        echo "Virtual network creation fail"
+        echo "Virtual network creation fail \n"
     fi
 
 
@@ -74,4 +74,6 @@ create_network() {
 if create_rg; then
     create_storage
     create_network
+
+    echo -e "\n All resources have been successfully created "
 fi
